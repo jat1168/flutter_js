@@ -29,7 +29,7 @@ extension JavascriptRuntimeFetchExtension on JavascriptRuntime {
                 url: request.responseURL,
                 text: () => Promise.resolve(request.responseText),
                 json: () => { 
-                  // TODO: review this handle because it may discard \n from json attributes
+                  // TODO: review this handle because it may discard \\n from json attributes
                   try {
                     // console.log('RESPONSE TEXT IN FETCH: ' + request.responseText);
                     return Promise.resolve(JSON.parse(request.responseText));
@@ -51,7 +51,7 @@ extension JavascriptRuntimeFetchExtension on JavascriptRuntime {
               request.open(options.method || 'get', url, true);
 
               request.onload = () => {
-                request.getAllResponseHeaders().replace(/^(.*?):[^\S\n]*([\s\S]*?)\$/gm, (m, key, value) => {
+                request.getAllResponseHeaders().replace(/^(.*?):[^\\S\\n]*([\\s\\S]*?)\$/gm, (m, key, value) => {
                   keys.push(key = key.toLowerCase());
                   all.push([key, value]);
                   headers[key] = headers[key] ? `\${headers[key]},\${value}` : value;
